@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+#app {
+    width: 400px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.input-container {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    margin-left: 10px;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4caf50;
+    color: #fff;
+    cursor: pointer;
+}
+
+select {
+    margin-left: 10px;
+    padding: 8px;
+}
+
+#tasksContainer {
+    padding: 10px;
+}
+
+.task {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 8px;
+}
+
+.task:hover {
+    background-color: #f9f9f9;
+}
+
+.icon {
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.trash-icon {
+    color: #d9534f;
+}
+
+.check-icon {
+    color: #5bc0de;
+}
+
+.task.selected {
+    background-color: #e0f7fa;
+}
+
+.buttons-container {
+    display: flex;
+}
+
+.buttons-container button {
+    margin-left: 5px;
+}
