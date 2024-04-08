@@ -352,3 +352,64 @@ const d1: Director = {
         }
     }
 }
+
+#------------------------------------------------
+lab 7
+#------------------------------------------------
+# 1
+import React from 'react';
+
+function Square({ n }) {
+  return <div>{n * n}</div>;
+}
+
+export default Square;
+#---------------------------------------------
+# 2
+function OnlyEven({ arr }) {
+    const evenNumbers = arr.filter(item => item % 2 === 0);
+    return <div>{evenNumbers.join(', ')}</div>;
+  }
+  
+  export default OnlyEven;
+# ---------------------------------------------
+# 3
+function Temperature({ t }) {
+    const textColor = t < 0 ? 'red' : 'blue';
+    
+    const style = {
+      color: textColor
+    };
+  
+    return <div style={style}>{t}</div>;
+  }
+  
+  export default Temperature;
+# ------------------------------------------------
+# 4
+import React, { useState } from 'react';
+
+function ToggleButton() {
+    const [isRed, setIsRed] = useState(true);
+  
+    const handleClick = () => {
+      setIsRed(!isRed);
+    };
+  
+    const buttonStyle = {
+      backgroundColor: isRed ? 'red' : 'green',
+      color: 'white',
+      padding: '10px 20px',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer'
+    };
+  
+    return (
+      <button style={buttonStyle} onClick={handleClick}>
+        {isRed ? 'Make Green' : 'Make Red'}
+      </button>
+    );
+  }
+  
+  export default ToggleButton;
