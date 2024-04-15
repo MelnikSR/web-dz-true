@@ -409,7 +409,167 @@ function ToggleButton() {
       <button style={buttonStyle} onClick={handleClick}>
         {isRed ? 'Make Green' : 'Make Red'}
       </button>
+
+      # ------------------------------------------------------------------
+      LAB 8
+      # ------------------------------------------------------------------
+      #1
+
+      import React, { useState, useEffect } from 'react';
+
+function Timer() {
+  const [count, setCount] = useState(10);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (count > 0) {
+        setCount(count - 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [count]);
+
+  return <div>{count}</div>;
+}
+
+function App() {
+  return (
+    <div className="App">
+      <h1>Обратный таймер</h1>
+      <Timer />
+    </div>
+  );
+}
+
+export default App;
     );
   }
   
   export default ToggleButton;
+
+# -----------------------------------------------------------------------------
+# 2
+
+import React, { useState, useEffect } from 'react';
+
+function Timer() {
+  const [count, setCount] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => {
+    let timer;
+
+    if (isRunning) {
+      timer = setInterval(() => {
+        setCount(count + 1);
+      }, 1000);
+    } else {
+      clearInterval(timer);
+    }
+
+    return () => clearInterval(timer);
+  }, [count, isRunning]);
+
+  const handleStartStop = () => {
+    setIsRunning(!isRunning);
+  };
+
+  return (
+    <div>
+      <div>{count}</div>
+      <button onClick={handleStartStop}>{isRunning ? '⏸️' : '▶️'}</button>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="App">
+      <h1>Таймер</h1>
+      <Timer />
+    </div>
+  );
+}
+
+export default App;
+
+# ------------------------------------------------------------------------------------------------
+# 3
+import React, { useState, useEffect } from 'react';
+
+function PrimeNumbers() {
+  const [primes, setPrimes] = useState([2]);
+
+  useEffect(() => {
+    const isPrime = num => {
+      for (let i = 2; i <= Math.sqrt(num); i++) {
+        if (num % i === 0) return false;
+      }
+      return num > 1;
+    };
+
+    const timer = setInterval(() => {
+      let nextPrime = primes[primes.length - 1] + 1;
+      while (!isPrime(nextPrime)) {
+        nextPrime++;
+      }
+      setPrimes(prevPrimes => [...prevPrimes, nextPrime]);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [primes]);
+
+  return (
+    <div>
+      {primes.map((prime, index) => (
+        <span key={index}>{prime}, </span>
+      ))}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div className="App">
+      <h1>Простые числа</h1>
+      <PrimeNumbers />
+    </div>
+  );
+}
+
+export default App;
+
+# ----------------------------------------------------------------
+# 5
+
+import React, { useState, useEffect } from 'react';
+
+function Revert({ s }) {
+  const [revertedString, setRevertedString] = useState(s);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRevertedString(prevString => {
+        const lastChar = prevString.charAt(prevString.length - 1);
+        const restOfString = prevString.slice(0, -1);
+        return lastChar + restOfString;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [s]);
+
+  return <div>{revertedString}</div>;
+}
+
+function App() {
+  return (
+    <div className="App">
+      <h1>Перевернутая строка</h1>
+      <Revert s="привет!" />
+    </div>
+  );
+}
+
+export default App;
