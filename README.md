@@ -573,7 +573,601 @@ function App() {
       <h1>Перевернутая строка</h1>
       <Revert s="привет!" />
     </div>
+
+
   );
 }
 
 export default App;
+
+# ----------------форма и валидации лаба------------------------------------------------
+# 1
+const CitySelect = () => {
+  const [selectedCity, setSelectedCity] = useState('');
+
+  const handleCityChange = (e) => {
+    setSelectedCity(e.target.value);
+  };
+
+  return (
+    <div>
+      <label htmlFor="citySelect">Выберите город:</label>
+      <select id="citySelect" value={selectedCity} onChange={handleCityChange}>
+        <option value="">Выберите город</option>
+        <option value="rio">Рио-де-Жанейро</option>
+        <option value="other">Другой город</option>
+      </select>
+      {selectedCity !== 'rio' && <p>Нет, это не Рио-де-Жанейро!</p>}
+    </div>
+  );
+};
+
+export default CitySelect;
+
+
+# 2
+const Calculator = () => {
+  const [num1, setNum1] = useState('');
+  const [num2, setNum2] = useState('');
+  const [operation, setOperation] = useState('');
+  const [result, setResult] = useState('');
+
+  const handleNum1Change = (e) => {
+    setNum1(e.target.value);
+  };
+
+  const handleNum2Change = (e) => {
+    setNum2(e.target.value);
+  };
+
+  const handleOperationChange = (e) => {
+    setOperation(e.target.value);
+  };
+
+  const calculateResult = () => {
+    let res;
+    switch (operation) {
+      case '+':
+        res = parseFloat(num1) + parseFloat(num2);
+        break;
+      case '-':
+        res = parseFloat(num1) - parseFloat(num2);
+        break;
+      case '*':
+        res = parseFloat(num1) * parseFloat(num2);
+        break;
+      case '/':
+        res = parseFloat(num1) / parseFloat(num2);
+        break;
+      default:
+        res = '';
+    }
+    setResult(res);
+  };
+
+  return (
+    <div>
+      <input type="number" value={num1} onChange={handleNum1Change} />
+      <select value={operation} onChange={handleOperationChange}>
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+      </select>
+      <input type="number" value={num2} onChange={handleNum2Change} />
+      <button onClick={calculateResult}>=</button>
+      <p>{result !== '' ? `${num1} ${operation} ${num2} = ${result}` : ''}</p>
+    </div>
+  );
+};
+
+export default Calculator;
+
+# 3
+
+import React, { useState } from 'react';
+
+
+
+const DecimalToBinaryConverter = (decimal) => {
+  return (decimal >>> 0).toString(2);
+};
+
+const BinaryToDecimalConverter = (binary) => {
+  return parseInt(binary, 2);
+};
+
+const NumberSystemConverter = () => {
+  const [number, setNumber] = useState('');
+  const [system, setSystem] = useState('decimal');
+  const [result, setResult] = useState('');
+
+  const handleNumberChange = (e) => {
+    setNumber(e.target.value);
+  };
+
+  const handleSystemChange = (e) => {
+    setSystem(e.target.value);
+  };
+
+  const handleConvert = () => {
+    if (system === 'decimal') {
+      setResult(BinaryToDecimalConverter(number));
+    } else {
+      setResult(DecimalToBinaryConverter(number));
+    }
+  };
+
+  return (
+    <div>
+      <input type="text" value={number} onChange={handleNumberChange} />
+      <select value={system} onChange={handleSystemChange}>
+        <option value="decimal">Decimal</option>
+        <option value="binary">Binary</option>
+      </select>
+      <button onClick={handleConvert}>Convert</button>
+      <input type="text" value={result} readOnly />
+    </div>
+  );
+};
+
+export default NumberSystemConverter;
+
+# 4
+
+import React, { useState, useEffect } from 'react';
+
+const AgeInSecondsCounter = ({ birthDate }) => {
+  const [ageInSeconds, setAgeInSeconds] = useState(0);
+
+  useEffect(() => {
+    const calculateAgeInSeconds = () => {
+      const birthDateObj = new Date(birthDate);
+      const currentDateObj = new Date();
+      const differenceInSeconds = (currentDateObj - birthDateObj) / 1000;
+      setAgeInSeconds(Math.floor(differenceInSeconds));
+    };
+
+    const intervalId = setInterval(calculateAgeInSeconds, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [birthDate]);
+
+  return <p>Вы прожили: {ageInSeconds} секунд.</p>;
+};
+
+export default AgeInSecondsCounter;
+
+# 5
+
+import React, { useState } from 'react';
+
+const NumberListFilter = () => {
+  const [number, setNumber] = useState('');
+  const [filter, setFilter] = useState('all');
+  const [numbers, setNumbers] = useState([1, 13, 6, 52, 4, 14]);
+
+  const handleNumberChange = (e) => {
+    setNumber(parseInt(e.target.value));
+  };
+
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
+
+  const handleAddNumber = () => {
+    if (!isNaN(number)) {
+      setNumbers([...numbers, number]);
+      setNumber('');
+    }
+  };
+
+  const filteredNumbers = numbers.filter((num) => {
+    if (filter === 'even') {
+      return num % 2 === 0;
+    } else if (filter === 'odd') {
+      return num % 2 !== 0;
+    } else {
+      return true;
+    }
+  });
+
+  return (
+    <div>
+      <input type="number" value={number} onChange={handleNumberChange} />
+      <button onClick={handleAddNumber}>+</button>
+      <select value={filter} onChange={handleFilterChange}>
+        <option value="all">All</option>
+        <option value="even">Even</option>
+        <option value="odd">Odd</option>
+      </select>
+      <ul>
+        {filteredNumbers.map((num, index) => (
+          <li key={index}>{num}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default NumberListFilter;
+
+# Валидация 1
+
+import React, { useState } from 'react';
+
+const RegistrationForm = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const errors = {};
+
+    if (!username) {
+      errors.username = 'Поле "Логин" обязательное';
+    } else if (username.length < 6 || username.length > 20) {
+      errors.username = 'Логин должен содержать от 6 до 20 символов';
+    } else if (!/^[a-zA-Z0-9]+$/.test(username)) {
+      errors.username = 'Логин может содержать только буквы латинского алфавита и цифры';
+    }
+
+    if (!password) {
+      errors.password = 'Поле "Пароль" обязательное';
+    }
+
+    if (!confirmPassword) {
+      errors.confirmPassword = 'Поле "Повтор пароля" обязательное';
+    } else if (password !== confirmPassword) {
+      errors.confirmPassword = 'Пароли должны совпадать';
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      
+      console.log('Форма отправлена');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="username">Логин:</label>
+        <input
+          type="text"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        {errors.username && <span>{errors.username}</span>}
+      </div>
+      <div>
+        <label htmlFor="password">Пароль:</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        {errors.password && <span>{errors.password}</span>}
+      </div>
+      <div>
+        <label htmlFor="confirmPassword">Повтор пароля:</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        {errors.confirmPassword && <span>{errors.confirmPassword}</span>}
+      </div>
+      <button type="submit">Зарегистрироваться</button>
+    </form>
+  );
+};
+
+export default RegistrationForm;
+
+# 2
+
+import React, { useState } from 'react';
+
+const ProfileEditForm = () => {
+  const [firstName, setFirstName] = useState('');
+  const [middleName, setMiddleName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [birthdate, setBirthdate] = useState('');
+  const [address, setAddress] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const errors = {};
+
+    if (!firstName.trim()) {
+      errors.firstName = 'Поле "Имя" обязательно';
+    }
+
+    if (!middleName.trim()) {
+      errors.middleName = 'Поле "Отчество" обязательно';
+    }
+
+    if (!lastName.trim()) {
+      errors.lastName = 'Поле "Фамилия" обязательно';
+    }
+
+    // Проверка формата даты рождения
+    if (birthdate.trim() && !/^\d{2}\.\d{2}\.\d{4}$/.test(birthdate)) {
+      errors.birthdate = 'Неправильный формат даты рождения (ДД.ММ.ГГГГ)';
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      // Отправка данных формы
+      console.log('Форма отправлена');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="firstName">Имя:</label>
+        <input
+          type="text"
+          id="firstName"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+        {errors.firstName && <span>{errors.firstName}</span>}
+      </div>
+      <div>
+        <label htmlFor="middleName">Отчество:</label>
+        <input
+          type="text"
+          id="middleName"
+          value={middleName}
+          onChange={(e) => setMiddleName(e.target.value)}
+        />
+        {errors.middleName && <span>{errors.middleName}</span>}
+      </div>
+      <div>
+        <label htmlFor="lastName">Фамилия:</label>
+        <input
+          type="text"
+          id="lastName"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+        {errors.lastName && <span>{errors.lastName}</span>}
+      </div>
+      <div>
+        <label htmlFor="birthdate">Дата рождения (ДД.ММ.ГГГГ):</label>
+        <input
+          type="text"
+          id="birthdate"
+          value={birthdate}
+          onChange={(e) => setBirthdate(e.target.value)}
+        />
+        {errors.birthdate && <span>{errors.birthdate}</span>}
+      </div>
+      <div>
+        <label htmlFor="address">Адрес:</label>
+        <input
+          type="text"
+          id="address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+      </div>
+      <button type="submit">Сохранить</button>
+    </form>
+  );
+};
+
+export default ProfileEditForm;
+
+# -----------------------------------lab 10--------------------------------
+# 1
+
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const PostDetails = () => {
+  const [id, setId] = useState('');
+  const [post, setPost] = useState(null);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleIdChange = (e) => {
+    setId(e.target.value);
+  };
+
+  const fetchData = async () => {
+    try {
+      const postResponse = await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`);
+      const userData = await axios.get(`https://jsonplaceholder.typicode.com/users/${postResponse.data.userId}`);
+
+      setPost(postResponse.data);
+      setUser(userData.data);
+      setError(null);
+    } catch (error) {
+      setPost(null);
+      setUser(null);
+      setError('Не удалось загрузить данные');
+    }
+  };
+
+  return (
+    <div>
+      <label htmlFor="postId">ID:</label>
+      <input type="text" id="postId" value={id} onChange={handleIdChange} />
+      <button onClick={fetchData}>Получить данные</button>
+
+      {error && <p>{error}</p>}
+
+      {post && user && (
+        <div>
+          <h2>Пост</h2>
+          <p>Title: {post.title}</p>
+          <p>Body: {post.body}</p>
+          
+          <h2>Пользователь</h2>
+          <p>Name: {user.name}</p>
+          <p>Email: {user.email}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PostDetails;
+
+# ---------------------------lab 5-----------------------------------------
+# 1
+function counter(n) {
+    let currentCount = n;
+    const intervalId = setInterval(() => {
+      console.log(currentCount);
+      if (currentCount === 0) {
+        clearInterval(intervalId);
+      } else {
+        currentCount--;
+      }
+    }, 1000);
+  }
+  
+
+  function createCounter(n) {
+    let currentCount = n;
+    let intervalId;
+  
+    return {
+      start() {
+        intervalId = setInterval(() => {
+          console.log(currentCount);
+          if (currentCount === 0) {
+            clearInterval(intervalId);
+          } else {
+            currentCount--;
+          }
+        }, 1000);
+      },
+      pause() {
+        clearInterval(intervalId);
+      },
+      stop() {
+        clearInterval(intervalId);
+        currentCount = n;
+      }
+    };
+  }
+  
+
+  const myCounter = createCounter(5);
+  myCounter.start();
+ 
+   setTimeout(() => myCounter.pause(), 5000);
+
+   # 2
+   function delay(N) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, N * 1000);
+    });
+  }
+  
+
+  async function counter(N) {
+    for (let i = N; i >= 0; i--) {
+      console.log(i);
+      await delay(1);
+    }
+  }
+  
+
+  counter(5); 
+  
+
+  async function getFirstRepo(username) {
+    try {
+      const userResponse = await fetch(`https://api.github.com/users/${username}`);
+      const userData = await userResponse.json();
+      const reposResponse = await fetch(userData.repos_url);
+      const reposData = await reposResponse.json();
+      if (reposData.length > 0) {
+        return reposData[0].name;
+      } else {
+        return 'Репозитории не найдены';
+      }
+    } catch (error) {
+      console.error('Ошибка при выполнении запроса:', error);
+      return 'Ошибка при выполнении запроса';
+    }
+  }
+  
+
+   getFirstRepo('MelnikSR').then(repoName => console.log(repoName)); 
+  
+
+  async function displayResult() {
+    try {
+      const repoName = await getFirstRepo('MelnikSR'); 
+      document.getElementById('result').innerText = repoName;
+    } catch (error) {
+      document.getElementById('result').innerText = 'Ошибка при выполнении запроса';
+    }
+  }
+  
+ 
+  displayResult();
+
+  #
+
+  
+class HttpError extends Error {
+    constructor(response) {
+      super(`${response.status} for ${response.url}`);
+      this.name = 'HttpError';
+      this.response = response;
+    }
+  }
+  
+  async function loadJson(url) {
+    const response = await fetch(url);
+    if (response.status === 200) {
+      return await response.json();
+    } else {
+      throw new HttpError(response);
+    }
+  }
+  
+  async function getGithubUser() {
+    let user;
+    while (!user) {
+      let name = prompt("Введите логин?", "iliakan");
+      try {
+        user = await loadJson(`https://api.github.com/users/${name}`);
+        alert(`Полное имя: ${user.name}.`);
+      } catch (err) {
+        if (err instanceof HttpError && err.response.status === 404) {
+          alert("Такого пользователя не существует, пожалуйста, повторите ввод.");
+        } else {
+          throw err;
+        }
+      }
+    }
+    return user;
+  }
+  
+  getGithubUser();
